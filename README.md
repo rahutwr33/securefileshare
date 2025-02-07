@@ -66,5 +66,12 @@ Share File:
 - User can  shared files with other users and that user will get link in the email. the link have expiry date
 - User can download or view shared files if permission is granted
 
+Security Practice
+- Rate limiting
+- Https url
+- 2 layer encryption when upload file
+- block user for 15 attempt if login attempt too much
+- 
+
 
 

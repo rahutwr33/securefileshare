@@ -63,7 +63,8 @@ Admin Role:
 
 
 Share File:
-- User can view shared files if permission is granted
-- User can download shared files if permission is granted
+- User can  shared files with other users and that user will get link in the email. the link have expiry date
+- User can download or view shared files if permission is granted
+
 
 

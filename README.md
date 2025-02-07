@@ -70,8 +70,8 @@ Security Practice
 - Rate limiting
 - Https url
 - 2 layer encryption when upload file
-- block user for 15 attempt if login attempt too much
-- 
+- block user for 15 minute attempt if login attempt too much ex 100 time
+
 
 
 

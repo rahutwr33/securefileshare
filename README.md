@@ -2,7 +2,6 @@
 
 system requirements:
 - docker
-- docker-compose
 
 
 ## Description

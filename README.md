@@ -23,7 +23,10 @@ To run the project, navigate to the root directory and run the following command
 cd react-fastapi-docker
 
 Set admin credentials in server/.env file for admin user
-right now it is abc@yopmail.com
+
+
+# Admin Email: abc@yopmail.com
+# Admin Password: Admin@123!
 
 
 docker-compose up --build

@@ -1,8 +1,8 @@
 # Secure file share
 
 system requirements:
-- docker
 
+- docker
 
 ## Description
 
@@ -33,44 +33,41 @@ docker-compose up --build
 
 to access the frontend, navigate to `http://localhost:3000`
 
-
-
 Functionality covered:
-
 
 # https added in server side
 
 Authentication:
+
+- Secure http only cookie
 - User can signup and login with email and password and 2 factor authentication uisng email
 - User can logout
 - admin can login with email and password with 2 factor authentication using email
 
-
-
-
 User Role:
+
 - User can upload file securely
 - User can download file file securely
 - User can view list of files
 - User can share file with other users with expiry date
 
 Admin Role:
+
 - Admin can view all users
 - Admin can view all files
 - Admin can delete any file
 - Admin can delete any file
 
-
 Share File:
-- User can  shared files with other users and that user will get link in the email. the link have expiry date
+
+- User can shared files with other users and that user will get link in the email. the link have expiry date
 - User can download or view shared files if permission is granted
 
 Security Practice
+
+- MFA using email
+- http only cookie authentication
 - Rate limiting
-- Https url
+- Https url backend
 - 2 layer encryption when upload file
 - block user for 15 minute attempt if login attempt too much ex 100 time
-
-
-
-

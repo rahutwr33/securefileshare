@@ -1,43 +1,20 @@
 import axios from 'axios';
-import { sessionManager } from './session';
-import { store } from '../store';
-import { logout, sessionExpired } from '../store/slices/authSlice';
 
 const axiosClient = axios.create({
   baseURL: 'https://127.0.0.1:8000/api',
+  withCredentials: true, // Enable sending cookies with requests
   headers: {
     'Content-Type': 'application/json',
-  },
+  }
 });
 
-// Add request interceptor for auth token
-axiosClient.interceptors.request.use(
-  (config) => {
-    const token = sessionManager.getToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-// Add response interceptor for token refresh
+// Add response interceptor to handle 401 responses
 axiosClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
-
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      // Check if token is expired
-      sessionManager.clearSession();
-      store.dispatch(sessionExpired());
-      location.href = '/login';
-      return Promise.reject(new Error('Session expired'));
-
-    
+    if (error.response?.status === 401) {
+      // Redirect to login page on unauthorized access
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   }

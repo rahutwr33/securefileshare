@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Body
+from fastapi import APIRouter, Depends, HTTPException, status, Body, Request
 from sqlalchemy.orm import Session
 from typing import List, Annotated
 from datetime import datetime, timedelta
@@ -29,6 +29,7 @@ get_admin_user = check_role([UserRole.ADMIN])
     dependencies=[Depends(get_admin_user)]
 )
 async def get_all_users(
+    request: Request,
     db: Session = Depends(get_db)
 ):
     # Query all users except those with ADMIN role

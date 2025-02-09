@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Body, Request
+from fastapi import APIRouter, Depends, HTTPException, status, Body, Request, Response
 from sqlalchemy.orm import Session
 from typing import Optional, Annotated, Dict, Any
 import re
@@ -245,7 +245,8 @@ async def verify_login(
             "code": "123456"
         }
     )],
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    response: Response = Response
 ):
     # Get verification record
     verification = db.query(LoginVerification).filter(
@@ -287,21 +288,23 @@ async def verify_login(
         expires_delta=access_token_expires
     )
     
-    # Store the token in the database with better error handling
+    # Store the token in the database
     try:
-        # Get raw token without decoding first
+        expiresat = datetime.utcnow() + access_token_expires
+        expiry_timestamp = expiresat.timestamp()
+        expiry_timestamp_int = int(expiry_timestamp)
+
         token_record = TokenBlacklist(
             token=access_token,
-            expires_at=datetime.utcnow() + access_token_expires  # Use the same expiration time we used to create token
+            expires_at=expiresat
         )
         
-        # Check if token already exists
         existing_token = db.query(TokenBlacklist).filter(
             TokenBlacklist.token == access_token
         ).first()
         
         if existing_token:
-            db.delete(existing_token)  # Remove old token if it exists
+            db.delete(existing_token)
         
         db.add(token_record)
         db.commit()
@@ -320,50 +323,43 @@ async def verify_login(
         full_name=user.full_name,
         role=user.role
     )
-    
+
+    # Set cookie only during verify-login
+    response.set_cookie(
+        key="access_token",
+        value=f"Bearer {access_token}",
+        httponly=True,
+        secure=True,
+        samesite="lax",
+        max_age=expiry_timestamp_int
+    )
+
     return Token(
         access_token=access_token,
         token_type="bearer",
         user=user_response
     )
 
-@router.post(
-    "/logout",
-    status_code=status.HTTP_200_OK,
-    summary="Logout user",
-    description="Invalidate the current session token",
-    response_description="Successfully logged out"
-)
+@router.post("/logout")
 async def logout(
-    token: str = Depends(oauth2_scheme),
+    response: Response,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_any_user)
 ):
-    try:
-        # Remove Bearer prefix if present
-        token = token.replace("Bearer ", "") if token.startswith("Bearer ") else token
-        
-        auth_service = AuthService(db)
-        success = auth_service.blacklist_token(token)
-        
-        if not success:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Token could not be blacklisted - may be invalid or already blacklisted"
-            )
-            
-        return {"message": "Successfully logged out"}
-        
-    except HTTPException as he:
-        raise he
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Logout failed: {str(e)}"
-        )
+    """Simplified logout that just removes the cookie"""
+    response.delete_cookie(
+        key="access_token",
+        secure=True,
+        httponly=True,
+        samesite="lax"
+    )
+    return {"message": "Successfully logged out"}
 
 @router.get("/profile", response_model=UserInResponse)
-async def get_user_profile(current_user: User = Depends(get_any_user)):
+async def get_user_profile(
+    request: Request,
+    current_user: User = Depends(get_current_user)
+):
     """
     Get the profile details of the currently logged-in user.
     This is a protected route that requires authentication.

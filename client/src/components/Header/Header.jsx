@@ -1,6 +1,6 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   AppBar,
   Toolbar,
@@ -9,17 +9,19 @@ import {
   Avatar,
   Menu,
   MenuItem,
-  Box,
-} from '@mui/material';
+  Box
+} from "@mui/material";
 import {
   Person as PersonIcon,
   ExitToApp as LogoutIcon,
-  Settings as SettingsIcon,
-} from '@mui/icons-material';
-import { logout } from '../../store/slices/authSlice';
+  Settings as SettingsIcon
+} from "@mui/icons-material";
+import { sessionExpired } from "../../store/slices/authSlice";
+import axiosClient from "../../utils/axios";
+
 const Header = () => {
   const navigate = useNavigate();
-  const { user } = useSelector(state => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const dispatch = useDispatch();
 
@@ -31,14 +33,18 @@ const Header = () => {
     setAnchorEl(null);
   };
 
-  const handleProfileClick = () => {
-    handleClose();
-    navigate('/profile');
-  };
+  const logoutUser = async () => {
+    try {
+      await axiosClient.post("/logout");
+      dispatch(sessionExpired());
+      localStorage.clear();
 
-  const logoutUser = () => {
-    console.log("logging out")
-    dispatch(logout());
+      setTimeout(() => {
+        location.href = "/login";
+      }, 1000);
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return (
@@ -47,14 +53,10 @@ const Header = () => {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Secure File Share
         </Typography>
-        
+
         {user && (
           <Box>
-            <IconButton
-              size="large"
-              onClick={handleMenu}
-              color="inherit"
-            >
+            <IconButton size="large" onClick={handleMenu} color="inherit">
               <Avatar sx={{ width: 32, height: 32 }}>
                 {user.username?.[0]?.toUpperCase() || <PersonIcon />}
               </Avatar>
@@ -75,4 +77,4 @@ const Header = () => {
   );
 };
 
-export default Header; 
+export default Header;

@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     MAIL_SSL: bool = True
 
     # Frontend settings
-    FRONTEND_URL: str = "http://localhost:3000"
+    FRONTEND_URL: str = "http://127.0.0.1:3000"
 
     # Admin settings
     ADMIN_EMAIL: str = "admin@example.com"

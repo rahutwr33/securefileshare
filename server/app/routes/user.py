@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, Form
+from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, Form, Request
 from fastapi.responses import HTMLResponse, FileResponse, StreamingResponse
 from sqlalchemy.orm import Session
 from typing import List
@@ -43,6 +43,7 @@ if len(SERVER_AES_IV) != 16:
 
 @router.post("/upload")
 async def upload_file(
+    request: Request,
     file: UploadFile = File(...),
     iv: str = Form(...),
     user_key: str = Form(...),

@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { sessionManager } from '../../utils/session';
 import axiosClient from '../../utils/axios';
 
 
@@ -8,11 +7,9 @@ export const logout = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await axiosClient.post('/logout');
-      sessionManager.clearSession();
       location.href = '/login';
       return { success: true };
     } catch (error) {
-      sessionManager.clearSession();
       location.href = '/login';
       return rejectWithValue(error.response?.data?.message || 'Logout failed');
     }

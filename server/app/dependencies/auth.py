@@ -1,10 +1,13 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
 from typing import List
 from ..models.user import User, UserRole
 from ..utils.auth import get_current_active_user
 
 def check_role(allowed_roles: List[UserRole]):
-    async def role_checker(current_user: User = Depends(get_current_active_user)):
+    async def role_checker(
+        request: Request,
+        current_user: User = Depends(get_current_active_user)
+    ):
         if current_user.role not in [role.value for role in allowed_roles]:  # Compare with string values
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,

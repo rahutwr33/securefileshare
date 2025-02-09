@@ -12,12 +12,12 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    // host: '0.0.0.0',
+    host: '127.0.0.1',
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'https://127.0.0.1:8000', // ✅ Correct backend URL
         changeOrigin: true,
-        secure: false,
+        secure: false,  // ✅ Ignore SSL issues in local development
       },
     },
   }

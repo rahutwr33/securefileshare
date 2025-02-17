@@ -82,8 +82,8 @@ Test Case
 
 # Unit Test Coverage 73%
 
-![alt text](https://github.com/rahutwr33/secure-file-share/blob/main/assets/1.png?raw=true)
+![alt text](https://github.com/rahutwr33/securefileshare/blob/main/asstes/1.png)
 
-![alt text](https://github.com/rahutwr33/secure-file-share/blob/main/assets/2.png?raw=true)
+![alt text](https://github.com/rahutwr33/securefileshare/blob/main/asstes/2.png)
 
-![alt text](https://github.com/rahutwr33/secure-file-share/blob/main/assets/3.png?raw=true)
+![alt text](https://github.com/rahutwr33/securefileshare/blob/main/asstes/3.png)

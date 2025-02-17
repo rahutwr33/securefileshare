@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+axios.defaults.withCredentials = true;
 const axiosClient = axios.create({
   baseURL: 'https://127.0.0.1:8000/api',
   withCredentials: true, // Enable sending cookies with requests

@@ -330,7 +330,7 @@ async def verify_login(
         value=f"Bearer {access_token}",
         httponly=True,
         secure=True,
-        samesite="lax",
+        samesite="None",
         max_age=expiry_timestamp_int
     )
 

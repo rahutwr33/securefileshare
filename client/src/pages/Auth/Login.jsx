@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -7,24 +7,24 @@ import {
   Typography,
   Container,
   Paper,
-  Alert,
-} from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { sanitizeInput, validateEmail } from '../../utils/validation';
-import axiosClient from '../../utils/axios';
+  Alert
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { sanitizeInput, validateEmail } from "../../utils/validation";
+import axiosClient from "../../utils/axios";
 
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: ""
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
       [name]: value
     }));
@@ -32,7 +32,7 @@ const Login = () => {
 
   const validateForm = () => {
     const errors = {};
-    
+
     // Sanitize and validate email
     const sanitizedEmail = sanitizeInput(formData.email);
     const emailError = validateEmail(sanitizedEmail);
@@ -40,25 +40,25 @@ const Login = () => {
 
     // Basic password validation for login
     if (!formData.password) {
-      errors.password = 'Password is required';
+      errors.password = "Password is required";
     }
 
-    setError(Object.values(errors)[0] || '');
-    
+    setError(Object.values(errors)[0] || "");
+
     if (Object.keys(errors).length === 0) {
       // Update email with sanitized value
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        email: sanitizedEmail,
+        email: sanitizedEmail
       }));
     }
-    
+
     return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (!validateForm()) {
       return;
@@ -70,20 +70,20 @@ const Login = () => {
       // Sanitize data before sending to server
       const sanitizedData = {
         email: sanitizeInput(formData.email),
-        password: formData.password,
+        password: formData.password
       };
 
-      const response = await axiosClient.post('/login', sanitizedData);
-      console.log(response.data)  
+      const response = await axiosClient.post("/login", sanitizedData);
+      console.log(response.data);
       // If successful, redirect to verification page with verification_id
-      navigate('/login/verify', { 
-        state: { 
+      navigate("/login/verify", {
+        state: {
           verification_id: response.data.verification_id,
           email: sanitizedData.email
         }
       });
     } catch (err) {
-      setError(err.response?.data?.detail || 'Login failed. Please try again.');
+      setError(err.response?.data?.detail || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -94,31 +94,31 @@ const Login = () => {
       <Box
         sx={{
           marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center"
         }}
       >
         <Paper
           elevation={3}
           sx={{
             padding: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '100%',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100%"
           }}
         >
           <Box
             sx={{
-              backgroundColor: 'primary.main',
-              borderRadius: '50%',
+              backgroundColor: "primary.main",
+              borderRadius: "50%",
               padding: 1,
-              marginBottom: 1,
+              marginBottom: 1
             }}
           >
-            <LockOutlinedIcon sx={{ color: 'white' }} />
+            <LockOutlinedIcon sx={{ color: "white" }} />
           </Box>
 
           <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
@@ -126,12 +126,12 @@ const Login = () => {
           </Typography>
 
           {error && (
-            <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+            <Alert severity="error" sx={{ width: "100%", mb: 2 }}>
               {error}
             </Alert>
           )}
 
-          <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
+          <Box component="form" onSubmit={handleSubmit} sx={{ width: "100%" }}>
             <TextField
               margin="normal"
               required
@@ -167,13 +167,13 @@ const Login = () => {
               disabled={loading}
               sx={{ mt: 3, mb: 2 }}
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? "Signing in..." : "Sign In"}
             </Button>
 
             <Button
               fullWidth
               variant="text"
-              onClick={() => navigate('/register')}
+              onClick={() => navigate("/register")}
               sx={{ mb: 1 }}
             >
               Don't have an account? Sign Up

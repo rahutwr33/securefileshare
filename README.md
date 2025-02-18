@@ -46,7 +46,7 @@ Authentication:
 
 User Role:
 
-- User can upload file securely
+- User can upload file securely (2 layer encryption)
 - User can download file file securely
 - User can view list of files
 - User can share file with other users with expiry date
@@ -70,6 +70,7 @@ Security Practice
 - Rate limiting
 - Https url backend
 - 2 layer encryption when upload file
+- Files are encrypted in Rest
 - block user for 15 minute attempt if login attempt too much ex 100 time
 
 Test Case
@@ -77,7 +78,6 @@ Test Case
 - admin can login with email and password with 2 factor authentication using email
 - admin can view all users
 - admin can view all files
-- admin can delete any file
 - admin can delete any file
 
 # Unit Test Coverage 73%
